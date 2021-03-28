@@ -41,8 +41,17 @@ struct Socket_link_t{
 		if (connect(_clientSocket, (SOCKADDR*)&_srvAddr, sizeof(SOCKADDR)))
 			throw "connect(_clientSocket, (SOCKADDR*)&_srvAddr, sizeof(SOCKADDR)) execute failed!";
 	}
+	void relink(){
+		closesocket(_clientSocket);
+		_clientSocket = socket(AF_INET, SOCK_STREAM, 0);
+		if (_clientSocket == INVALID_SOCKET)
+			throw "_clientSocket = socket(AF_INET, SOCK_STREAM, 0) execute failed!";
+		if (connect(_clientSocket, (SOCKADDR*)&_srvAddr, sizeof(SOCKADDR)))
+			throw "connect(_clientSocket, (SOCKADDR*)&_srvAddr, sizeof(SOCKADDR)) execute failed!";
+	}
 	Socket_link_t(SOCKET clientSocket){
 		_clientSocket = clientSocket;
+		_srvAddr={};
 	}
 	~Socket_link_t(){
 		//清理
