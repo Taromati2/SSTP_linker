@@ -95,3 +95,4 @@ struct SSTP_link_t:Socket_link_t{
 		return base_SSTP_send("INSTALL SSTP/1.0",args);
 	}
 };
+
