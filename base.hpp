@@ -4,7 +4,6 @@
 #include<string>
 #pragma comment(lib,"ws2_32.lib")
 
-typedef std::string string_t;
 
 inline struct WSA_t{
 	static inline bool inited = 0;
@@ -58,13 +57,13 @@ struct Socket_link_t{
 		//清理
 		closesocket(_clientSocket);
 	}
-	void base_send(string_t massage){
+	void base_send(std::string massage){
 		//发送消息
 		::send(_clientSocket, massage.c_str(),massage.size(),0);
 	}
-	string_t base_get_ret(){
+	std::string base_get_ret(){
 		//接收消息
-		string_t massage;
+		std::string massage;
 		char recvBuf[513];
 		while(1){
 			int a= ::recv(_clientSocket, recvBuf, 512, 0);

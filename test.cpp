@@ -1,15 +1,13 @@
 #include <iostream>
 #include "sstp.hpp"
 
-
 int main() {
-	system("chcp 65001");
 	SSTP_link_t link;
-	std::cout << link.NOTYFY({{"Event", "OnCommunicate"},
-							  {"Reference0", "user"},
-							  {"Reference1", "你好"}});
-	std::cout << link.NOTYFY({{"Event", "OnCommunicate"},
-							  {"Reference0", "user"},
-							  {"Reference1", "近来可好"}})["Script"];
+	std::wcout << link.NOTYFY({{L"Event", L"OnCommunicate"},
+							   {L"Reference0", L"user"},
+							   {L"Reference1", L"你好"}});
+	std::wcout << link.NOTYFY({{L"Event", L"OnCommunicate"},
+							   {L"Reference0", L"user"},
+							   {L"Reference1", L"近来可好"}})[L"Script"];
 }
 

@@ -1,56 +1,58 @@
 #include <map>
 #include "base.hpp"
+#include "codepage.hpp"
+
 struct SSTP_link_arg_parts_t{
-	string_t _name;
-	string_t _var;
+	std::wstring _name;
+	std::wstring _var;
 };
 struct SSTP_link_args_t{
-	std::map<string_t,string_t>_m;
+	std::map<std::wstring,std::wstring>_m;
 	SSTP_link_args_t(std::initializer_list<SSTP_link_arg_parts_t>a){
 		for (auto&x:a) {
 			_m[x._name]=x._var;
 		}
 	}
-	SSTP_link_args_t(string_t a){
-		if(a.find(":") > a.find("\r\n"))
-			a.erase(0,a.find("\r\n"));
-		while(a!=""){
-			string_t t=a.substr(0,a.find("\r\n"));
-			if (t.find(": ")!=t.npos){
-				_m[t.substr(0,t.find(": "))]=t.substr(t.find(": ")+2);
-				a.erase(0,a.find("\r\n")+2);
-				while (!a.substr(0,a.find("\r\n")).find(": ")){
-					_m[t.substr(0,t.find(": "))]+="\r\n"+a.substr(0,a.find("\r\n"));
-					a.erase(0,a.find("\r\n")+2);
+	SSTP_link_args_t(std::wstring a){
+		if(a.find(L":") > a.find(L"\r\n"))
+			a.erase(0,a.find(L"\r\n"));
+		while(a!=L""){
+			std::wstring t=a.substr(0,a.find(L"\r\n"));
+			if (t.find(L": ")!=t.npos){
+				_m[t.substr(0,t.find(L": "))]=t.substr(t.find(L": ")+2);
+				a.erase(0,a.find(L"\r\n")+2);
+				while (!a.substr(0,a.find(L"\r\n")).find(L": ")){
+					_m[t.substr(0,t.find(L": "))]+=L"\r\n"+a.substr(0,a.find(L"\r\n"));
+					a.erase(0,a.find(L"\r\n")+2);
 				}
 			}else{
-				a.erase(0,a.find("\r\n")+2);
+				a.erase(0,a.find(L"\r\n")+2);
 			}
 		}
 	}
 	template<class T>
-	SSTP_link_args_t(T&&a):SSTP_link_args_t(string_t(a)){}
-	operator string_t(){
-		string_t aret;
+	SSTP_link_args_t(T&&a):SSTP_link_args_t(std::wstring(a)){}
+	operator std::wstring(){
+		std::wstring aret;
 		for (auto&x:_m) {
-			aret += x.first + ": " + x.second + "\r\n";
+			aret += x.first + L": " + x.second + L"\r\n";
 		}
 		return aret;
 	}
-	auto operator[](string_t a){return _m[a];}
+	auto operator[](std::wstring a){return _m[a];}
 };
 
 template<class T>
-auto operator+(T&&a,SSTP_link_args_t&b) {return a+string_t(b);}
+auto operator+(T&&a,SSTP_link_args_t&b) {return a+std::wstring(b);}
 
 struct SSTP_ret_t{
-	string_t _m;
-	SSTP_ret_t(string_t a):_m(a){}
-	operator string_t(){return _m;}
+	std::wstring _m;
+	SSTP_ret_t(std::wstring a):_m(a){}
+	operator std::wstring(){return _m;}
 	explicit operator SSTP_link_args_t(){return _m;}
 	auto to_str(){return _m;}
 	auto to_map(){return operator SSTP_link_args_t();}
-	auto operator[](string_t a){return SSTP_link_args_t(_m)[a];}
+	auto operator[](std::wstring a){return SSTP_link_args_t(_m)[a];}
 };
 
 template<class T>
@@ -62,37 +64,46 @@ struct SSTP_link_t:Socket_link_t{
 	SSTP_link_args_t _header;
 
 	SSTP_link_t(
-				SSTP_link_args_t header={{"Charset","UTF-8"},{"Sender","void"}},
-				string_t addr="127.0.0.1",unsigned int port=9821
+				SSTP_link_args_t header={{L"Charset",L"UTF-8"},{L"Sender",L"void"}},
+				std::string addr="127.0.0.1",unsigned int port=9821
 				):
 		Socket_link_t(addr,port),_header(header){}
 
-	string_t get_SSTP_head(string_t SSTP_type){
-		return SSTP_type+"\r\n"+_header;
+	std::wstring get_SSTP_head(std::wstring SSTP_type){
+		return SSTP_type+L"\r\n"+_header;
 	}
-	string_t base_SSTP_send(string_t head,SSTP_link_args_t args){
-		base_send(get_SSTP_head(head)+args+"\r\n");
-		auto aret = base_get_ret();
+	std::wstring base_SSTP_send(std::wstring head,SSTP_link_args_t args){
 		relink();
-		return aret;
+		{
+			auto send=get_SSTP_head(head)+args+L"\r\n";
+			auto charset_begin=send.find(L"\r\nCharset: ")+11;
+			auto charset=send.substr(charset_begin,send.find(L"\r\n",charset_begin));
+			base_send(UnicodeToMultiByte(send,StringtoCodePage(charset.c_str()),0));
+		}
+		{
+			auto temp = base_get_ret();
+			auto charset_begin=temp.find("\r\nCharset: ")+11;
+			auto charset=temp.substr(charset_begin,temp.find("\r\n",charset_begin));
+			return MultiByteToUnicode(temp,StringtoCodePage(charset.c_str()),0);
+		}
 	}
 	SSTP_ret_t NOTYFY(SSTP_link_args_t args){
-		return base_SSTP_send("NOTIFY SSTP/1.1",args);
+		return base_SSTP_send(L"NOTIFY SSTP/1.1",args);
 	}
 	SSTP_ret_t SEND(SSTP_link_args_t args){
-		return base_SSTP_send("SEND SSTP/1.4",args);
+		return base_SSTP_send(L"SEND SSTP/1.4",args);
 	}
 	SSTP_ret_t EXECUTE(SSTP_link_args_t args){
-		return base_SSTP_send("EXECUTE SSTP/1.3",args);
+		return base_SSTP_send(L"EXECUTE SSTP/1.3",args);
 	}
 	SSTP_ret_t COMMUNICATE(SSTP_link_args_t args){
-		return base_SSTP_send("COMMUNICATE SSTP/1.1",args);
+		return base_SSTP_send(L"COMMUNICATE SSTP/1.1",args);
 	}
 	SSTP_ret_t GIVE(SSTP_link_args_t args){
-		return base_SSTP_send("GIVE SSTP/1.1",args);
+		return base_SSTP_send(L"GIVE SSTP/1.1",args);
 	}
 	SSTP_ret_t INSTALL(SSTP_link_args_t args){
-		return base_SSTP_send("INSTALL SSTP/1.0",args);
+		return base_SSTP_send(L"INSTALL SSTP/1.0",args);
 	}
 };
 
