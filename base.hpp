@@ -1,7 +1,8 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #include<WinSock2.h>
-#pragma comment(lib, "ws2_32.lib")
+#include<string>
+#pragma comment(lib,"ws2_32.lib")
 
 typedef std::string string_t;
 
@@ -12,7 +13,7 @@ inline struct WSA_t{
 			return;
 		WSADATA wsaData = {0};
 		if (WSAStartup(MAKEWORD(2, 1), &wsaData) != 0)
-			throw WSAGetLastError();
+			throw (std::runtime_error)std::to_string(WSAGetLastError());
 	}
 	void uninit(){
 		if(inited)
@@ -30,7 +31,7 @@ struct Socket_link_t{
 		WSA.init();
 		_clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 		if (_clientSocket == INVALID_SOCKET)
-			throw "_clientSocket = socket(AF_INET, SOCK_STREAM, 0) execute failed!";
+			throw (std::runtime_error)"_clientSocket = socket(AF_INET, SOCK_STREAM, 0) execute failed!";
 		//初始化服务器端地址族变量
 		
 		_srvAddr.sin_addr.S_un.S_addr = inet_addr(addr.c_str());
@@ -39,15 +40,15 @@ struct Socket_link_t{
 
 		//连接服务器
 		if (connect(_clientSocket, (SOCKADDR*)&_srvAddr, sizeof(SOCKADDR)))
-			throw "connect(_clientSocket, (SOCKADDR*)&_srvAddr, sizeof(SOCKADDR)) execute failed!";
+			throw (std::runtime_error)"connect(_clientSocket, (SOCKADDR*)&_srvAddr, sizeof(SOCKADDR)) execute failed!";
 	}
 	void relink(){
 		closesocket(_clientSocket);
 		_clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 		if (_clientSocket == INVALID_SOCKET)
-			throw "_clientSocket = socket(AF_INET, SOCK_STREAM, 0) execute failed!";
+			throw (std::runtime_error)"_clientSocket = socket(AF_INET, SOCK_STREAM, 0) execute failed!";
 		if (connect(_clientSocket, (SOCKADDR*)&_srvAddr, sizeof(SOCKADDR)))
-			throw "connect(_clientSocket, (SOCKADDR*)&_srvAddr, sizeof(SOCKADDR)) execute failed!";
+			throw (std::runtime_error)"connect(_clientSocket, (SOCKADDR*)&_srvAddr, sizeof(SOCKADDR)) execute failed!";
 	}
 	Socket_link_t(SOCKET clientSocket){
 		_clientSocket = clientSocket;
@@ -86,7 +87,7 @@ struct Socket_t{
 		//创建套接字
 		_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 		if (_serverSocket == INVALID_SOCKET)
-			throw L"_serverSocket = socket(AF_INET, SOCK_STREAM, 0) execute failed!";
+			throw (std::runtime_error)"_serverSocket = socket(AF_INET, SOCK_STREAM, 0) execute failed!";
 		//初始化服务器地址族变量
 		_srvAddr.sin_addr.S_un.S_addr = htonl(INADDR_ANY);
 		_srvAddr.sin_family = AF_INET;
@@ -94,7 +95,7 @@ struct Socket_t{
 
 		//绑定
 		if (bind(_serverSocket, (SOCKADDR*)&_srvAddr, sizeof(SOCKADDR)) == SOCKET_ERROR)
-			throw L"bind(_serverSocket, (SOCKADDR*)&_srvAddr, sizeof(SOCKADDR)) execute failed!";
+			throw (std::runtime_error)"bind(_serverSocket, (SOCKADDR*)&_srvAddr, sizeof(SOCKADDR)) execute failed!";
 	}
 	~Socket_t(){
 		//清理
@@ -106,13 +107,13 @@ struct Socket_t{
 		int len = sizeof(SOCKADDR);
 		SOCKET connSocket = accept(_serverSocket, (SOCKADDR*)&clientAddr, &len);
 		if (connSocket == INVALID_SOCKET)
-			throw L"accept(_serverSocket, (SOCKADDR*)&clientAddr, &len) execute failed!";
+			throw (std::runtime_error)"accept(_serverSocket, (SOCKADDR*)&clientAddr, &len) execute failed!";
 		return connSocket;
 	}
 	void listen(){
 		//监听
 		if (::listen(_serverSocket, 10) == SOCKET_ERROR)
-			throw L"listen(_serverSocket, 10) execute failed!";
+			throw (std::runtime_error)"listen(_serverSocket, 10) execute failed!";
 	}
 };
 
