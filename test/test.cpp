@@ -2,7 +2,7 @@
 #include "sstp.hpp"
 
 int main() {
-	SSTP_link_t link;
+	SSTP_link_n::SSTP_link_t link;
 	std::wcout << link.NOTYFY({{L"Event", L"OnCommunicate"},
 							   {L"Reference0", L"user"},
 							   {L"Reference1", L"你好"}});

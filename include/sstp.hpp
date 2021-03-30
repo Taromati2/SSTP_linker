@@ -1,5 +1,5 @@
 #include <map>
-#include "base.hpp"
+#include "socket.hpp"
 #include "codepage.hpp"
 
 namespace SSTP_link_n{
