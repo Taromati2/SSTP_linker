@@ -1,5 +1,5 @@
 #include <iostream>
-#include "sstp.hpp"
+#include "../include/sstp.hpp"
 
 int main() {
 	SSTP_link_n::SSTP_link_t link;
