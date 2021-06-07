@@ -1,7 +1,8 @@
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
+﻿#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #include<WinSock2.h>
 #include<string>
+#include<stdexcept>
 #pragma comment(lib,"ws2_32.lib")
 
 namespace Socket_link_n{

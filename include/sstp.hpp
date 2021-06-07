@@ -16,7 +16,7 @@ namespace SSTP_link_n{
 				_m[x._name]=x._var;
 			}
 		}
-		SSTP_link_args_t(std::wstring a){
+		explicit SSTP_link_args_t(std::wstring a){
 			if(a.find(L":") > a.find(L"\r\n"))
 				a.erase(0,a.find(L"\r\n"));
 			while(a!=L""){
@@ -34,29 +34,30 @@ namespace SSTP_link_n{
 			}
 		}
 		template<class T>
-		SSTP_link_args_t(T&&a):SSTP_link_args_t(std::wstring(a)){}
-		operator std::wstring(){
+		explicit SSTP_link_args_t(T&&a):SSTP_link_args_t(std::wstring(a)){}
+		explicit operator std::wstring(){
 			std::wstring aret;
 			for (auto&x:_m) {
 				aret += x.first + L": " + x.second + L"\r\n";
 			}
 			return aret;
 		}
+		bool has(std::wstring a){return _m.count(a);}
 		auto operator[](std::wstring a){return _m[a];}
 	};
 
 	template<class T>
-	auto operator+(T&&a,SSTP_link_args_t&b) {return a+std::wstring(b);}
+	auto operator+(T&&a,SSTP_link_args_t b) {return std::wstring(a)+std::wstring(b);}
 
 	struct SSTP_ret_t{
 		std::wstring _m;
 		SSTP_ret_t(std::wstring a):_m(a){}
 		operator std::wstring(){return _m;}
-		explicit operator SSTP_link_args_t(){return _m;}
+		explicit operator SSTP_link_args_t(){return(SSTP_link_args_t)_m;}
 		auto to_str(){return _m;}
 		auto to_map(){return operator SSTP_link_args_t();}
 		auto operator[](std::wstring a){
-			if a!=L"Script"
+			if(a!=L"Script")
 				a=L"X-SSTP-Return-"+a;
 			return SSTP_link_args_t(_m)[a];
 		}
