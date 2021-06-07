@@ -47,7 +47,7 @@ namespace SSTP_link_n{
 	};
 
 	template<class T>
-	auto operator+(T&&a,SSTP_link_args_t b) {return std::wstring(a)+std::wstring(b);}
+	auto operator+(T&&a,SSTP_link_args_t&b) {return std::wstring(a)+std::wstring(b);}
 
 	struct SSTP_ret_t{
 		std::wstring _m;
@@ -64,9 +64,9 @@ namespace SSTP_link_n{
 	};
 
 	template<class T>
-	auto&&operator<<(T&&a,SSTP_ret_t b) {return a<<b.to_str();}
+	auto&&operator<<(T&&a,SSTP_ret_t&b) {return a<<b.to_str();}
 	template<class T>
-	auto operator+(T&&a,SSTP_ret_t b) {return a+b.to_str();}
+	auto operator+(T&&a,SSTP_ret_t&b) {return a+b.to_str();}
 
 	struct SSTP_link_t:Socket_link_t{
 		SSTP_link_args_t _header;
