@@ -55,7 +55,11 @@ namespace SSTP_link_n{
 		explicit operator SSTP_link_args_t(){return _m;}
 		auto to_str(){return _m;}
 		auto to_map(){return operator SSTP_link_args_t();}
-		auto operator[](std::wstring a){return SSTP_link_args_t(_m)[a];}
+		auto operator[](std::wstring a){
+			if a!=L"Script"
+				a=L"X-SSTP-Return-"+a;
+			return SSTP_link_args_t(_m)[a];
+		}
 	};
 
 	template<class T>
