@@ -42,8 +42,16 @@ namespace SSTP_link_n{
 			}
 			return aret;
 		}
-		bool has(std::wstring a){return _m.count(a);}
-		auto operator[](std::wstring a){return _m[a];}
+		bool has(std::wstring a){
+			if(a!=L"Script")
+				a=L"X-SSTP-Return-"+a;
+			return _m.count(a);
+		}
+		auto operator[](std::wstring a){
+			if(a!=L"Script")
+				a=L"X-SSTP-Return-"+a;
+			return _m[a];
+		}
 	};
 
 	template<class T>
@@ -57,8 +65,6 @@ namespace SSTP_link_n{
 		auto to_str(){return _m;}
 		auto to_map(){return operator SSTP_link_args_t();}
 		auto operator[](std::wstring a){
-			if(a!=L"Script")
-				a=L"X-SSTP-Return-"+a;
 			return SSTP_link_args_t(_m)[a];
 		}
 	};
