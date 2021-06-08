@@ -1,6 +1,6 @@
-#include <map>
 #include "socket.hpp"
 #include "codepage.hpp"
+#include <map>
 
 namespace SSTP_link_n{
 	using namespace CODEPAGE_n;

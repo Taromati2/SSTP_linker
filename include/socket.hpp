@@ -1,8 +1,8 @@
 ﻿#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
-#include<WinSock2.h>
-#include<string>
-#include<stdexcept>
+#include <WinSock2.h>
+#include <string>
+#include <stdexcept>
 #pragma comment(lib,"ws2_32.lib")
 
 namespace Socket_link_n{
@@ -67,12 +67,12 @@ namespace Socket_link_n{
 			std::string massage;
 			char recvBuf[513];
 			while(1){
-				int a= ::recv(_clientSocket, recvBuf, 512, 0);
+				auto a= ::recv(_clientSocket, recvBuf, 512, 0);
 				if (a == EAGAIN || a == 0)
 					break;
 				else{
 					recvBuf[512]=0;
-					massage += recvBuf;
+					massage += std::string{recvBuf,(unsigned)a};
 				}
 			}
 			return massage;

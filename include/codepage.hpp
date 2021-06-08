@@ -1,6 +1,7 @@
 //copy from https://github.com/ponapalt/csaori
 //
 #include <vector>
+#include <Windows.h>
 
 namespace CODEPAGE_n{
 	#undef CP_UTF8
