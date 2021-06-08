@@ -87,7 +87,7 @@ namespace SSTP_link_n{
 			return SSTP_type+L"\r\n"+_header;
 		}
 		std::wstring base_SSTP_send(std::wstring head,SSTP_link_args_t args){
-			relink();
+			relink();//SSTP server can't process "keep-alive" style connection like HTTP: http://ssp.shillest.net/bts/view.php?id=170#c384
 			{
 				auto send=get_SSTP_head(head)+args+L"\r\n";
 				auto charset_begin=send.find(L"\r\nCharset: ")+11;
