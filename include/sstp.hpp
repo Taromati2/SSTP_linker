@@ -53,6 +53,7 @@ namespace SSTP_link_n{
 	struct SSTP_ret_t{
 		std::wstring _m;
 		SSTP_link_args_t __m;
+		SSTP_ret_t():__m({}){}
 		SSTP_ret_t(std::wstring a):_m(a),__m(_m){}
 		operator std::wstring(){return _m;}
 		explicit operator SSTP_link_args_t(){return __m;}
