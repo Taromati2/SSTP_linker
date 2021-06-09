@@ -119,7 +119,7 @@ namespace SSTP_link_n{
 		/*
 		define this in aya:
 		SHIORI_EV.On_Has_Event : void {
-			SHIORI_FW.MakeX_SSTP_PassThru('Result',ISFUNC(reference0)||ISFUNC('On_'+reference0)||ISFUNC('SHIORI_EV.'+reference0)||ISFUNC('SHIORI_EV.On_'+reference0))
+			SHIORI_FW.Make_X_SSTP_PassThru('Result',ISFUNC(reference0)||ISFUNC('On_'+reference0)||ISFUNC('SHIORI_EV.'+reference0)||ISFUNC('SHIORI_EV.On_'+reference0))
 		}
 		*/
 		bool Has_Event(std::wstring event_name){
