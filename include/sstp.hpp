@@ -43,8 +43,8 @@ namespace SSTP_link_n{
 			return aret;
 		}
 		auto var(){return _m[L"Script"];}
-		bool has(std::wstring a){return _m.count(L"X-SSTP-Return-"+a);}
-		auto operator[](std::wstring a){return _m[L"X-SSTP-Return-"+a];}
+		bool has(std::wstring a){return _m.count(L"X-SSTP-PassThru-"+a);}
+		auto operator[](std::wstring a){return _m[L"X-SSTP-PassThru-"+a];}
 	};
 
 	template<class T>
@@ -119,7 +119,7 @@ namespace SSTP_link_n{
 		/*
 		define this in aya:
 		SHIORI_EV.On_Has_Event : void {
-			SHIORI_FW.MakeXSSTPreturn('Result',ISFUNC(reference0)||ISFUNC('On_'+reference0)||ISFUNC('SHIORI_EV.'+reference0)||ISFUNC('SHIORI_EV.On_'+reference0))
+			SHIORI_FW.MakeX_SSTP_PassThru('Result',ISFUNC(reference0)||ISFUNC('On_'+reference0)||ISFUNC('SHIORI_EV.'+reference0)||ISFUNC('SHIORI_EV.On_'+reference0))
 		}
 		*/
 		bool Has_Event(std::wstring event_name){
