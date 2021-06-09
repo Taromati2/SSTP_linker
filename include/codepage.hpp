@@ -81,22 +81,22 @@ namespace CODEPAGE_n{
 	UINT StringtoCodePage(const char *str)
 	{
 		if ( str && *str ) {
-			if ( _strnicmp(str,"shift_jis",9) == 0 ) {
+			if ( strncmp(str,"shift_jis",9) == 0 ) {
 				return CP_SJIS;
 			}
-			if ( _strnicmp(str,"x-sjis",6) == 0 ) {
+			if ( strncmp(str,"x-sjis",6) == 0 ) {
 				return CP_SJIS;
 			}
-			if ( _strnicmp(str,"iso-2022-jp",11) == 0 ) {
+			if ( strncmp(str,"iso-2022-jp",11) == 0 ) {
 				return CP_ISO2022JP;
 			}
-			if ( _strnicmp(str,"euc-jp",6) == 0 ) {
+			if ( strncmp(str,"euc-jp",6) == 0 ) {
 				return CP_EUCJP;
 			}
-			if ( _strnicmp(str,"x-euc-jp",8) == 0 ) {
+			if ( strncmp(str,"x-euc-jp",8) == 0 ) {
 				return CP_EUCJP;
 			}
-			if ( _strnicmp(str,"utf-8",5) == 0 ) {
+			if ( strncmp(str,"utf-8",5) == 0 ) {
 				return CP_UTF8;
 			}
 		}
@@ -106,22 +106,22 @@ namespace CODEPAGE_n{
 	UINT StringtoCodePage(const wchar_t *str)
 	{
 		if ( str && *str ) {
-			if ( _wcsnicmp(str,L"shift_jis",9) == 0 ) {
+			if ( wcsncmp(str,L"shift_jis",9) == 0 ) {
 				return CP_SJIS;
 			}
-			if ( _wcsnicmp(str,L"x-sjis",6) == 0 ) {
+			if ( wcsncmp(str,L"x-sjis",6) == 0 ) {
 				return CP_SJIS;
 			}
-			if ( _wcsnicmp(str,L"iso-2022-jp",11) == 0 ) {
+			if ( wcsncmp(str,L"iso-2022-jp",11) == 0 ) {
 				return CP_ISO2022JP;
 			}
-			if ( _wcsnicmp(str,L"euc-jp",6) == 0 ) {
+			if ( wcsncmp(str,L"euc-jp",6) == 0 ) {
 				return CP_EUCJP;
 			}
-			if ( _wcsnicmp(str,L"x-euc-jp",8) == 0 ) {
+			if ( wcsncmp(str,L"x-euc-jp",8) == 0 ) {
 				return CP_EUCJP;
 			}
-			if ( _wcsnicmp(str,L"utf-8",5) == 0 ) {
+			if ( wcsncmp(str,L"utf-8",5) == 0 ) {
 				return CP_UTF8;
 			}
 		}
