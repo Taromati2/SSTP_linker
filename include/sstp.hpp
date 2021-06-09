@@ -42,16 +42,9 @@ namespace SSTP_link_n{
 			}
 			return aret;
 		}
-		bool has(std::wstring a){
-			if(a!=L"Script")
-				a=L"X-SSTP-Return-"+a;
-			return _m.count(a);
-		}
-		auto operator[](std::wstring a){
-			if(a!=L"Script")
-				a=L"X-SSTP-Return-"+a;
-			return _m[a];
-		}
+		auto var(){return _m[L"Script"];}
+		bool has(std::wstring a){return _m.count(L"X-SSTP-Return-"+a);}
+		auto operator[](std::wstring a){return _m[L"X-SSTP-Return-"+a];}
 	};
 
 	template<class T>
@@ -61,12 +54,14 @@ namespace SSTP_link_n{
 		std::wstring _m;
 		SSTP_ret_t(std::wstring a):_m(a){}
 		operator std::wstring(){return _m;}
-		explicit operator SSTP_link_args_t(){return(SSTP_link_args_t)_m;}
+		explicit operator SSTP_link_args_t(){return SSTP_link_args_t(_m);}
 		auto to_str(){return _m;}
 		auto to_map(){return operator SSTP_link_args_t();}
-		auto operator[](std::wstring a){
-			return SSTP_link_args_t(_m)[a];
-		}
+		auto operator[](std::wstring a){return to_map()[a];}
+		auto get_head(){return _m.substr(_m.find(L"SSTP/"),_m.find(L"\r\n"));}
+		auto get_code(){return std::stoi(_m.substr(_m.find(L"SSTP/")+9,_m.find(L"SSTP/")+9+3));}
+		auto var(){return to_map().var();}
+		bool has(std::wstring a){return to_map().has(a);}
 	};
 
 	template<class T>
@@ -118,6 +113,15 @@ namespace SSTP_link_n{
 		}
 		SSTP_ret_t INSTALL(SSTP_link_args_t args){
 			return base_SSTP_send(L"INSTALL SSTP/1.0",args);
+		}
+		/*
+		define this in aya:
+		SHIORI_EV.On_Has_Event : void {
+			SHIORI_FW.MakeXSSTPreturn('Result',ISFUNC(reference0)||ISFUNC('On_'+reference0)||ISFUNC('SHIORI_EV.'+reference0)||ISFUNC('SHIORI_EV.On_'+reference0))
+		}
+		*/
+		bool Has_Event(std::wstring event_name){
+			return NOTYFY({{ L"Event", L"Has_Event" },{ L"Reference0", event_name }})[L"Result"]==L"1";
 		}
 	};
 }
