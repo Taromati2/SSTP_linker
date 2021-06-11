@@ -3,6 +3,10 @@
 #include <vector>
 #include <Windows.h>
 
+#ifdef _DEBUG
+	#include <iostream>
+#endif
+
 namespace CODEPAGE_n{
 	#undef CP_UTF8
 	typedef enum {
@@ -12,7 +16,7 @@ namespace CODEPAGE_n{
 		CP_UTF8=65001
 	} CODEPAGE;
 
-	std::string UnicodeToMultiByte(const wchar_t *Source, unsigned int CodePage, DWORD Flags)
+	std::string UnicodeToMultiByte(const wchar_t *Source, unsigned int CodePage, DWORD Flags=0)
 	{
 		if ( Source && *Source ) {
 			if (int Len = ::WideCharToMultiByte(CodePage, Flags, Source, wcslen(Source), NULL, 0, NULL, NULL)) {
@@ -25,7 +29,7 @@ namespace CODEPAGE_n{
 		return "";
 	}
 
-	std::wstring MultiByteToUnicode(const char* Source, unsigned int CodePage, DWORD Flags)
+	std::wstring MultiByteToUnicode(const char* Source, unsigned int CodePage, DWORD Flags=0)
 	{
 		if ( Source && *Source ) {
 			if (int Len = ::MultiByteToWideChar(CodePage, Flags, Source, strlen(Source), NULL, 0)) {
@@ -38,7 +42,7 @@ namespace CODEPAGE_n{
 		return L"";
 	}
 
-	std::string UnicodeToMultiByte(std::wstring Source, unsigned int CodePage, DWORD Flags)
+	std::string UnicodeToMultiByte(std::wstring Source, unsigned int CodePage, DWORD Flags=0)
 	{
 		if ( Source.size() ) {
 			if (int Len = ::WideCharToMultiByte(CodePage, Flags, Source.c_str(), Source.size(), NULL, 0, NULL, NULL)) {
@@ -51,7 +55,7 @@ namespace CODEPAGE_n{
 		return "";
 	}
 
-	std::wstring MultiByteToUnicode(std::string Source, unsigned int CodePage, DWORD Flags)
+	std::wstring MultiByteToUnicode(std::string Source, unsigned int CodePage, DWORD Flags=0)
 	{
 		if ( Source.size() ) {
 			if (int Len = ::MultiByteToWideChar(CodePage, Flags, Source.c_str(), Source.size(), NULL, 0)) {
@@ -75,56 +79,65 @@ namespace CODEPAGE_n{
 			case CP_UTF8:
 				return L"UTF-8";
 		}
+		#ifdef _DEBUG
+			std::wcout << "unknown charset: " << cset << std::endl;
+		#endif
 		return L"unknown charset";
 	}
 
 	UINT StringtoCodePage(const char *str)
 	{
 		if ( str && *str ) {
-			if ( strncmp(str,"shift_jis",9) == 0 ) {
+			if ( _strnicmp(str,"shift_jis",9) == 0 ) {
 				return CP_SJIS;
 			}
-			if ( strncmp(str,"x-sjis",6) == 0 ) {
+			if ( _strnicmp(str,"x-sjis",6) == 0 ) {
 				return CP_SJIS;
 			}
-			if ( strncmp(str,"iso-2022-jp",11) == 0 ) {
+			if ( _strnicmp(str,"iso-2022-jp",11) == 0 ) {
 				return CP_ISO2022JP;
 			}
-			if ( strncmp(str,"euc-jp",6) == 0 ) {
+			if ( _strnicmp(str,"euc-jp",6) == 0 ) {
 				return CP_EUCJP;
 			}
-			if ( strncmp(str,"x-euc-jp",8) == 0 ) {
+			if ( _strnicmp(str,"x-euc-jp",8) == 0 ) {
 				return CP_EUCJP;
 			}
-			if ( strncmp(str,"utf-8",5) == 0 ) {
+			if ( _strnicmp(str,"utf-8",5) == 0 ) {
 				return CP_UTF8;
 			}
 		}
+		#ifdef _DEBUG
+			std::wcout << "unknown charset: " << str << std::endl;
+		#endif
 		return CP_SJIS;
 	}
 
 	UINT StringtoCodePage(const wchar_t *str)
 	{
 		if ( str && *str ) {
-			if ( wcsncmp(str,L"shift_jis",9) == 0 ) {
+			if ( _wcsnicmp(str,L"shift_jis",9) == 0 ) {
 				return CP_SJIS;
 			}
-			if ( wcsncmp(str,L"x-sjis",6) == 0 ) {
+			if ( _wcsnicmp(str,L"x-sjis",6) == 0 ) {
 				return CP_SJIS;
 			}
-			if ( wcsncmp(str,L"iso-2022-jp",11) == 0 ) {
+			if ( _wcsnicmp(str,L"iso-2022-jp",11) == 0 ) {
 				return CP_ISO2022JP;
 			}
-			if ( wcsncmp(str,L"euc-jp",6) == 0 ) {
+			if ( _wcsnicmp(str,L"euc-jp",6) == 0 ) {
 				return CP_EUCJP;
 			}
-			if ( wcsncmp(str,L"x-euc-jp",8) == 0 ) {
+			if ( _wcsnicmp(str,L"x-euc-jp",8) == 0 ) {
 				return CP_EUCJP;
 			}
-			if ( wcsncmp(str,L"utf-8",5) == 0 ) {
+			if ( _wcsnicmp(str,L"utf-8",5) == 0 ) {
 				return CP_UTF8;
 			}
 		}
+		#ifdef _DEBUG
+			std::wcout << "unknown charset: " << str << std::endl;
+		#endif
 		return CP_SJIS;
 	}
 }

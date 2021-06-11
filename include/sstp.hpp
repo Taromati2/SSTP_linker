@@ -87,15 +87,17 @@ namespace SSTP_link_n{
 			relink();//SSTP server can't process "keep-alive" style connection like HTTP: http://ssp.shillest.net/bts/view.php?id=170#c384
 			{
 				auto send=get_SSTP_head(head)+args+L"\r\n";
-				auto charset_begin=send.find(L"\r\nCharset: ")+11;
-				auto charset=send.substr(charset_begin,send.find(L"\r\n",charset_begin));
-				base_send(UnicodeToMultiByte(send,StringtoCodePage(charset.c_str()),0));
+				auto charset=send;
+				charset=charset.substr(charset.find(L"\r\nCharset: ")+11);
+				charset=charset.substr(0,charset.find(L"\r\n"));
+				base_send(UnicodeToMultiByte(send,StringtoCodePage(charset.c_str())));
 			}
 			{
 				auto temp = base_get_ret();
-				auto charset_begin=temp.find("\r\nCharset: ")+11;
-				auto charset=temp.substr(charset_begin,temp.find("\r\n",charset_begin));
-				return MultiByteToUnicode(temp,StringtoCodePage(charset.c_str()),0);
+				auto charset=temp;
+				charset=charset.substr(charset.find("\r\nCharset: ")+11);
+				charset=charset.substr(0,charset.find("\r\n"));
+				return MultiByteToUnicode(temp,StringtoCodePage(charset.c_str()));
 			}
 		}
 		SSTP_ret_t NOTYFY(SSTP_link_args_t args){

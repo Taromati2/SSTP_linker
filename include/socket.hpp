@@ -58,9 +58,13 @@ namespace Socket_link_n{
 			//清理
 			closesocket(_clientSocket);
 		}
+		void base_send(const void*data,size_t size){
+			//发送消息
+			::send(_clientSocket, (const char*)data,size,0);
+		}
 		void base_send(std::string massage){
 			//发送消息
-			::send(_clientSocket, massage.c_str(),massage.size(),0);
+			base_send(massage.c_str(),massage.size());
 		}
 		std::string base_get_ret(){
 			//接收消息
