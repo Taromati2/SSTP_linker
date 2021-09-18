@@ -9,11 +9,13 @@
 
 namespace CODEPAGE_n{
 	#undef CP_UTF8
+	#undef CP_ACP
 	typedef enum {
 		CP_SJIS=932,
 		CP_EUCJP=20932,
 		CP_ISO2022JP=50220,
-		CP_UTF8=65001
+		CP_UTF8=65001,
+		CP_ACP=0
 	} CODEPAGE;
 
 	std::string UnicodeToMultiByte(const wchar_t *Source, unsigned int CodePage, DWORD Flags=0)
