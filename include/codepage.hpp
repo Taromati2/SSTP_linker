@@ -18,7 +18,7 @@ namespace CODEPAGE_n{
 		CP_ACP=0
 	} CODEPAGE;
 
-	std::string UnicodeToMultiByte(const wchar_t *Source, unsigned int CodePage, DWORD Flags=0)
+	inline std::string UnicodeToMultiByte(const wchar_t *Source, unsigned int CodePage, DWORD Flags=0)
 	{
 		if ( Source && *Source ) {
 			if (int Len = ::WideCharToMultiByte(CodePage, Flags, Source, wcslen(Source), NULL, 0, NULL, NULL)) {
@@ -31,7 +31,7 @@ namespace CODEPAGE_n{
 		return "";
 	}
 
-	std::wstring MultiByteToUnicode(const char* Source, unsigned int CodePage, DWORD Flags=0)
+	inline std::wstring MultiByteToUnicode(const char* Source, unsigned int CodePage, DWORD Flags=0)
 	{
 		if ( Source && *Source ) {
 			if (int Len = ::MultiByteToWideChar(CodePage, Flags, Source, strlen(Source), NULL, 0)) {
@@ -44,7 +44,7 @@ namespace CODEPAGE_n{
 		return L"";
 	}
 
-	std::string UnicodeToMultiByte(std::wstring Source, unsigned int CodePage, DWORD Flags=0)
+	inline std::string UnicodeToMultiByte(std::wstring Source, unsigned int CodePage, DWORD Flags=0)
 	{
 		if ( Source.size() ) {
 			if (int Len = ::WideCharToMultiByte(CodePage, Flags, Source.c_str(), Source.size(), NULL, 0, NULL, NULL)) {
@@ -57,7 +57,7 @@ namespace CODEPAGE_n{
 		return "";
 	}
 
-	std::wstring MultiByteToUnicode(std::string Source, unsigned int CodePage, DWORD Flags=0)
+	inline std::wstring MultiByteToUnicode(std::string Source, unsigned int CodePage, DWORD Flags=0)
 	{
 		if ( Source.size() ) {
 			if (int Len = ::MultiByteToWideChar(CodePage, Flags, Source.c_str(), Source.size(), NULL, 0)) {
@@ -70,7 +70,7 @@ namespace CODEPAGE_n{
 		return L"";
 	}
 
-	std::wstring CodePagetoString(unsigned int cset){
+	inline std::wstring CodePagetoString(unsigned int cset){
 		switch(cset){
 			case CP_SJIS:
 				return L"Shift_JIS";
@@ -87,7 +87,7 @@ namespace CODEPAGE_n{
 		return L"unknown charset";
 	}
 
-	UINT StringtoCodePage(const char *str)
+	inline UINT StringtoCodePage(const char *str)
 	{
 		if ( str && *str ) {
 			if ( _strnicmp(str,"shift_jis",9) == 0 ) {
@@ -115,7 +115,7 @@ namespace CODEPAGE_n{
 		return CP_SJIS;
 	}
 
-	UINT StringtoCodePage(const wchar_t *str)
+	inline UINT StringtoCodePage(const wchar_t *str)
 	{
 		if ( str && *str ) {
 			if ( _wcsnicmp(str,L"shift_jis",9) == 0 ) {
