@@ -1,0 +1,1 @@
+# moved to: https://github.com/steve02081504/my-gists/blob/master/ukagaka/sstp.hpp  
